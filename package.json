@@ -1,0 +1,40 @@
+{
+  "name": "ts-js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "pretest": "tslint -p ./tsconfig.json --type-check \"./src/**/*.ts\" \"./test/**/*.ts\"",
+    "test": "istanbul cover _mocha test/**/*.test.ts",
+    "prebuild": "npm run clear && npm test",
+    "build": "tsc -p ./tsconfig.build.json",
+    "postbuild": "cp ./README.md ./dist && cp ./package.json ./dist",
+    "clear": "rm -rf ./dist"
+  },
+  "author": "Juneil",
+  "homepage": "https://github.com/juneil/ts-js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/juneil/ts-js.git"
+  },
+  "keywords": [
+    "schema",
+    "jsonschema",
+    "json",
+    "entities",
+    "typescript",
+    "decorator",
+    "node",
+    "nodejs"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "reflect-metadata": "0.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "^10.12.24",
+    "ts-node": "^8.0.2",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.3"
+  }
+}
