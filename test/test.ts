@@ -1,26 +1,42 @@
-import { Property, Schema } from '../src/lib/tsjs';
+import { Property, serializer, Integer, Required } from '../src/lib/tsjs';
+import { PROPERTIES } from '../src/lib/common';
+// import * as ajv from 'ajv';
 
-
-@Schema
 class Yolo {
-    @Property
+
+    @Property()
     prop1: string;
-    @Property
+
+    @Property()
+    @Integer()
     prop2: number;
-    @Property
+
+    @Property()
     prop3: Array<number>;
+
 }
 
-@Schema
 class Yolo2 extends Yolo {
-    @Property
+
+    @Required()
+    @Property()
     prop4 = true;
+
+    @Property()
+    prop5: Yolo
+
+    @Property()
+    prop1: boolean
+
 }
 
-Reflect.getMetadataKeys(Yolo2).forEach(x => console.log(Reflect.getMetadata(x, Yolo2)));
+// Reflect.getMetadataKeys(Yolo2).forEach(x => console.log(Reflect.getMetadata(x, Yolo2)));
 
-
-
+// const AJV = new ajv();
+const y = new Yolo2();
+y.prop1 = 'ldldld';
+// console.log(serializer(Yolo2));
+console.log(Reflect.getMetadata(PROPERTIES, Yolo))
 
 
 // import { Type } from '..';

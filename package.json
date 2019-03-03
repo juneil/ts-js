@@ -1,6 +1,6 @@
 {
-  "name": "ts-js",
-  "version": "1.0.0",
+  "name": "@juneil/tschema",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -29,6 +29,7 @@
   ],
   "license": "ISC",
   "dependencies": {
+    "ajv": "6.9.1",
     "reflect-metadata": "0.1.12"
   },
   "devDependencies": {
