@@ -1,4 +1,4 @@
-import { Property, serializer, Integer, Required } from '../src/lib/tsjs';
+import { Property, serializer, Integer, Required } from '../src/lib/tschema';
 import { PROPERTIES } from '../src/lib/common';
 // import * as ajv from 'ajv';
 
@@ -25,16 +25,11 @@ class Yolo2 extends Yolo {
     @Property()
     prop5: Yolo
 
-    @Property()
-    prop1: boolean
-
 }
 
 // Reflect.getMetadataKeys(Yolo2).forEach(x => console.log(Reflect.getMetadata(x, Yolo2)));
 
 // const AJV = new ajv();
-const y = new Yolo2();
-y.prop1 = 'ldldld';
 // console.log(serializer(Yolo2));
 console.log(Reflect.getMetadata(PROPERTIES, Yolo))
 

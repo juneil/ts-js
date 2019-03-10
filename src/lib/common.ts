@@ -1,7 +1,7 @@
-export const PROPERTIES     = Symbol('ts2jsc-properties');
-export const TYPE           = Symbol('ts2jsc-type');
-export const INTEGER        = Symbol('ts2jsc-integer');
-export const REQUIRED       = Symbol('ts2jsc-required');
+export const PROPERTIES     = Symbol('tschema-properties');
+export const TYPE           = Symbol('tschema-type');
+export const INTEGER        = Symbol('tschema-integer');
+export const REQUIRED       = Symbol('tschema-required');
 
 export const AnyClass = Function;
 

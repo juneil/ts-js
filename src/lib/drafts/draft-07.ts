@@ -1,4 +1,4 @@
-import { ClassProperty } from '../tsjs';
+import { ClassProperty } from '../tschema';
 import { TYPE, INTEGER, REQUIRED, AnyClass, isAnyClass, PROPERTIES } from '../common';
 
 interface Context {
@@ -14,7 +14,7 @@ export class JSONSchemaDraft07 {
         private name: string,
         private properties: ClassProperty[]
     ) {
-        this.id = `http://ts2jsc.com/${this.name.toLowerCase()}.json`;
+        this.id = `http://tschema.com/${this.name.toLowerCase()}.json`;
     }
 
     private serializeProperties(properties: ClassProperty[], ctx) {

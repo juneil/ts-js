@@ -1,25 +1,20 @@
 import 'reflect-metadata';
 import { JSONSchemaDraft07 } from './drafts/draft-07';
-import { TYPE, INTEGER, REQUIRED, PROPERTIES } from './common';
+import { TYPE, INTEGER, REQUIRED, PROPERTIES, AnyClass } from './common';
 export type ClassProperty = { key: string, rules: { rule: Symbol, value: any }[] };
 
-// const schemaSymbol = Symbol('ts2jsc-schema');
-
 /**
- * Called by the @Schema decorator
- * Initialize the metadata of the class
+ * Integer decorator
  */
-// function schemaClass(target: any) {
-//     const metadata = {};
-//     Reflect.defineMetadata(schemaSymbol, metadata, target);
-// }
-
 function integerDecorator() {
     return (target: any, key: string) => {
         addRule(target, key, INTEGER, null);
     }
 }
 
+/**
+ * Required decorator
+ */
 function requiredDecorator() {
     return (target: any, key: string) => {
         addRule(target, key, REQUIRED, null);
@@ -81,9 +76,12 @@ function serialize(target: any) {
     return jsc.toJSONSchema();
 }
 
-// export const Schema = schemaClass;
+function containsProperties(token: AnyClass): boolean {
+    return !!Reflect.getOwnMetadataKeys(token).find(t => t === PROPERTIES);
+}
+
 export const Property = propertyDecorator;
 export const Integer = integerDecorator;
 export const Required = requiredDecorator;
-
+export const isTSchema = containsProperties;
 export const serializer = serialize;

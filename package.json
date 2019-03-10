@@ -1,21 +1,21 @@
 {
   "name": "@juneil/tschema",
-  "version": "0.1.0",
+  "version": "1.0.0-alpha.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "pretest": "tslint -p ./tsconfig.json --type-check \"./src/**/*.ts\" \"./test/**/*.ts\"",
     "test": "istanbul cover _mocha test/**/*.test.ts",
-    "prebuild": "npm run clear && npm test",
+    "prebuild": "npm run clear",
     "build": "tsc -p ./tsconfig.build.json",
     "postbuild": "cp ./README.md ./dist && cp ./package.json ./dist",
     "clear": "rm -rf ./dist"
   },
   "author": "Juneil",
-  "homepage": "https://github.com/juneil/ts-js",
+  "homepage": "https://github.com/juneil/tschema",
   "repository": {
     "type": "git",
-    "url": "https://github.com/juneil/ts-js.git"
+    "url": "https://github.com/juneil/tschema.git"
   },
   "keywords": [
     "schema",
@@ -29,7 +29,6 @@
   ],
   "license": "ISC",
   "dependencies": {
-    "ajv": "6.9.1",
     "reflect-metadata": "0.1.12"
   },
   "devDependencies": {
