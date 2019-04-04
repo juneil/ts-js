@@ -28,9 +28,6 @@ function requiredDecorator() {
 function propertyDecorator() {
     return (target: any, key: string) => {
         let type = Reflect.getMetadata('design:type', target, key);
-        // if (hasMetadata(type)) {
-
-        // }
         if (type === Object) {
             const instance = Reflect.construct(target.constructor, []);
             if (instance[key] instanceof Array) {
@@ -44,14 +41,14 @@ function propertyDecorator() {
 }
 
 function addRule(target, key: string, rule: Symbol, value) {
-    const properties: ClassProperty[] = Reflect.getMetadata(PROPERTIES, target.constructor) || [];
-    const prop = properties.find(p => p.key === key);
+    const props: ClassProperty[] = Reflect.getOwnMetadata(PROPERTIES, target.constructor) || [];
+    const prop = props.find(p => p.key === key);
     if (prop) {
         prop.rules.push({ rule, value });
     } else {
-        properties.push({ key, rules: [{ rule, value }] })
+        props.push({ key, rules: [{ rule, value }] })
     }
-    Reflect.defineMetadata(PROPERTIES, properties, target.constructor);
+    Reflect.defineMetadata(PROPERTIES, props, target.constructor);
 }
 
 function serializeType(type: string) {
@@ -71,13 +68,31 @@ function serializeType(type: string) {
     }
 }
 
+function getProperties(target: AnyClass): ClassProperty[] {
+    const parent = Reflect.getPrototypeOf(target);
+    let props: ClassProperty[] = Reflect.getOwnMetadata(PROPERTIES, target);
+    if (parent['name']) {
+        props = [].concat(properties, getProperties(parent as any))
+    }
+    return props;
+}
+
 function serialize(target: any) {
-    const jsc = new JSONSchemaDraft07(target.name, Reflect.getMetadata(PROPERTIES, target));
+    const jsc = new JSONSchemaDraft07(target.name, getProperties(target));
     return jsc.toJSONSchema();
 }
 
 function containsProperties(token: AnyClass): boolean {
-    return !!Reflect.getOwnMetadataKeys(token).find(t => t === PROPERTIES);
+    return token && !!Reflect.getOwnMetadataKeys(token).find(t => t === PROPERTIES);
+}
+
+function propertiesList(token: AnyClass): { [prop: string]: Object | String | Number | Boolean | Function | undefined } {
+    return getProperties(token)
+        .map(prop => ({ ...prop.rules.find(rule => rule.rule === TYPE), key: prop.key }))
+        .reduce((a, c) => {
+            a[c.key] = c.value;
+            return a;
+        }, {});
 }
 
 export const Property = propertyDecorator;
@@ -85,3 +100,4 @@ export const Integer = integerDecorator;
 export const Required = requiredDecorator;
 export const isTSchema = containsProperties;
 export const serializer = serialize;
+export const properties = propertiesList;

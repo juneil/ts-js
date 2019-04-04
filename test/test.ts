@@ -1,4 +1,4 @@
-import { Property, serializer, Integer, Required } from '../src/lib/tschema';
+import { Property, serializer, Integer, Required, properties } from '../src/lib/tschema';
 import { PROPERTIES } from '../src/lib/common';
 // import * as ajv from 'ajv';
 
@@ -27,12 +27,22 @@ class Yolo2 extends Yolo {
 
 }
 
+class Yolo3 extends Yolo2 {
+    @Property()
+    prop6: string;
+}
+
 // Reflect.getMetadataKeys(Yolo2).forEach(x => console.log(Reflect.getMetadata(x, Yolo2)));
 
 // const AJV = new ajv();
 // console.log(serializer(Yolo2));
-console.log(Reflect.getMetadata(PROPERTIES, Yolo))
-
+// console.log(Reflect.getMetadata(PROPERTIES, Yolo));
+console.log(properties(Yolo));
+console.log(properties(Yolo2));
+console.log(properties(Yolo3));
+try {
+console.log(serializer(Yolo2));
+} catch (e) { console.log(e) }
 
 // import { Type } from '..';
 // import { Entity } from './entity';
