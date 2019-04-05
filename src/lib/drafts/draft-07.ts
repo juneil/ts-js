@@ -18,7 +18,6 @@ export class JSONSchemaDraft07 {
     }
 
     private serializeProperties(properties: ClassProperty[], ctx) {
-        console.log(properties);
         return properties
             .map(property => this.type(property, ctx))
             .reduce((a, property) => ({ ...a, [property.key]: property.result }), {});
