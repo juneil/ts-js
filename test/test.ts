@@ -1,17 +1,17 @@
-import { Property, serializer, Integer, Required, properties } from '../src/lib/tschema';
+import { Optional, serializer, Integer, Required, properties, getProperties } from '../src/lib/tschema';
 import { PROPERTIES } from '../src/lib/common';
 // import * as ajv from 'ajv';
 
 class Yolo {
 
-    @Property()
+    @Optional()
     prop1: string;
 
-    @Property()
+    @Optional()
     @Integer()
     prop2: number;
 
-    @Property()
+    @Optional()
     prop3: Array<number>;
 
 }
@@ -19,16 +19,15 @@ class Yolo {
 class Yolo2 extends Yolo {
 
     @Required()
-    @Property()
     prop4 = true;
 
-    @Property()
+    @Optional()
     prop5: Yolo
 
 }
 
 class Yolo3 extends Yolo2 {
-    @Property()
+    @Optional()
     prop6: string;
 }
 
@@ -37,11 +36,12 @@ class Yolo3 extends Yolo2 {
 // const AJV = new ajv();
 // console.log(serializer(Yolo2));
 // console.log(Reflect.getMetadata(PROPERTIES, Yolo));
-console.log(properties(Yolo));
-console.log(properties(Yolo2));
-console.log(properties(Yolo3));
+// console.log(properties(Yolo));
+// console.log(properties(Yolo2));
+// console.log(properties(Yolo3));
 try {
-console.log(serializer(Yolo2));
+    // console.log(getProperties(Yolo2).map(x => x.rules))
+console.log(serializer(Yolo3));
 } catch (e) { console.log(e) }
 
 // import { Type } from '..';

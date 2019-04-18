@@ -17,6 +17,7 @@ function integerDecorator() {
  */
 function requiredDecorator() {
     return (target: any, key: string) => {
+        propertyDecorator()(target, key);
         addRule(target, key, REQUIRED, null);
     }
 }
@@ -43,7 +44,7 @@ function propertyDecorator() {
 function addRule(target, key: string, rule: Symbol, value) {
     const props: ClassProperty[] = Reflect.getOwnMetadata(PROPERTIES, target.constructor) || [];
     const prop = props.find(p => p.key === key);
-    if (prop) {
+    if (prop && !prop.rules.find(r => r.rule === rule)) {
         prop.rules.push({ rule, value });
     } else {
         props.push({ key, rules: [{ rule, value }] })
@@ -68,11 +69,11 @@ function serializeType(type: string) {
     }
 }
 
-function getProperties(target: AnyClass): ClassProperty[] {
+export function getProperties(target: AnyClass): ClassProperty[] {
     const parent = Reflect.getPrototypeOf(target);
     let props: ClassProperty[] = Reflect.getOwnMetadata(PROPERTIES, target);
     if (parent['name']) {
-        props = [].concat(properties, getProperties(parent as any))
+        props = [].concat(props, getProperties(parent as any))
     }
     return props;
 }
@@ -88,16 +89,16 @@ function containsProperties(token: AnyClass): boolean {
 
 function propertiesList(token: AnyClass): { [prop: string]: Object | String | Number | Boolean | Function | undefined } {
     return getProperties(token)
-        .map(prop => ({ ...prop.rules.find(rule => rule.rule === TYPE), key: prop.key }))
+        .map(prop => ({ ...(prop.rules || []).find(rule => rule.rule === TYPE), key: prop.key }))
         .reduce((a, c) => {
             a[c.key] = c.value;
             return a;
         }, {});
 }
 
-export const Property = propertyDecorator;
-export const Integer = integerDecorator;
+export const Optional = propertyDecorator;
 export const Required = requiredDecorator;
+export const Integer = integerDecorator;
 export const isTSchema = containsProperties;
 export const serializer = serialize;
 export const properties = propertiesList;
