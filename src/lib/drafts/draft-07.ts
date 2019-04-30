@@ -1,5 +1,5 @@
 import { ClassProperty } from '../tschema';
-import { TYPE, INTEGER, REQUIRED, AnyClass, isAnyClass, PROPERTIES } from '../common';
+import { TYPE, INTEGER, REQUIRED, AnyClass, isAnyClass, PROPERTIES, ITEM } from '../common';
 
 interface Context {
     definitions: AnyClass[]
@@ -70,7 +70,7 @@ export class JSONSchemaDraft07 {
             case Boolean:
                 return { ...property, result: { type: 'boolean' } };
             case Array:
-                return { ...property, result: { type: 'array' } };
+                return { ...property, result: { type: 'array', ...this.item(property) } };
             case undefined:
                 return { ...property, result: { type: 'null' } };
             default:
@@ -83,6 +83,30 @@ export class JSONSchemaDraft07 {
                 }
                 return { ...property, result: { type: 'object' } };
         }
+    }
+
+    private item(property: ClassProperty) {
+        const rule = property.rules.find(r => r.rule === ITEM) || <any>{};
+        let result;
+        switch (rule.value) {
+            case Number:
+                result = { type: 'number' };
+                break;
+            case String:
+                result = { type: 'string' };
+                break;
+            case Boolean:
+                result = { type: 'boolean' };
+                break;
+            default:
+                if (this.hasMetadata(rule.value)) {
+                    result = new JSONSchemaDraft07(rule.value.name.toLowerCase(), Reflect.getMetadata(PROPERTIES, rule.value))
+                        .toJSONSchema(false, false);
+                } else {
+                    result = { type: 'object' };
+                }
+        }
+        return { items: result };
     }
 
     private integer(property: ClassProperty) {

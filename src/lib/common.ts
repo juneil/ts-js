@@ -2,6 +2,7 @@ export const PROPERTIES     = Symbol('tschema-properties');
 export const TYPE           = Symbol('tschema-type');
 export const INTEGER        = Symbol('tschema-integer');
 export const REQUIRED       = Symbol('tschema-required');
+export const ITEM           = Symbol('tschema-item');
 
 export const AnyClass = Function;
 

@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { JSONSchemaDraft07 } from './drafts/draft-07';
-import { TYPE, INTEGER, REQUIRED, PROPERTIES, AnyClass } from './common';
+import { TYPE, INTEGER, REQUIRED, PROPERTIES, AnyClass, ITEM } from './common';
 export type ClassProperty = { key: string, rules: { rule: Symbol, value: any }[] };
 
 /**
@@ -9,6 +9,12 @@ export type ClassProperty = { key: string, rules: { rule: Symbol, value: any }[]
 function integerDecorator() {
     return (target: any, key: string) => {
         addRule(target, key, INTEGER, null);
+    }
+}
+
+function itemDecorator(type: String | Number | Boolean | Object | AnyClass) {
+    return (target: any, key: string) => {
+        addRule(target, key, ITEM, type);
     }
 }
 
@@ -99,6 +105,8 @@ function propertiesList(token: AnyClass): { [prop: string]: Object | String | Nu
 export const Optional = propertyDecorator;
 export const Required = requiredDecorator;
 export const Integer = integerDecorator;
+export const Item = itemDecorator;
+
 export const isTSchema = containsProperties;
 export const serializer = serialize;
 export const properties = propertiesList;
