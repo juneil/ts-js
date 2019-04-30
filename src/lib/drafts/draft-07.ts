@@ -33,7 +33,7 @@ export class JSONSchemaDraft07 {
         return isAnyClass(classToCheck) && !!Reflect.getMetadata(PROPERTIES, classToCheck);
     }
 
-    public toJSONSchema(root = true) {
+    public toJSONSchema(root = true, id = true) {
         const ctx: Context = {
             definitions: []
         };
@@ -43,7 +43,7 @@ export class JSONSchemaDraft07 {
             type: 'object',
             properties: this.serializeProperties(this.properties, ctx),
             required: this.serializeRequired(this.properties),
-            definitions: this.definitions(ctx.definitions)
+            // definitions: this.definitions(ctx.definitions)
         };
         if (root) {
             return {
@@ -51,11 +51,13 @@ export class JSONSchemaDraft07 {
                 $id: this.id,
                 ...json
             }
+        } else if (id) {
+            return {
+                $id: `${this.name.toLowerCase()}.json`,
+                ...json
+            }
         }
-        return {
-            $id: `${this.name.toLowerCase()}.json`,
-            ...json
-        }
+        return json;
     }
 
     private type(property: ClassProperty, ctx) {
@@ -75,7 +77,9 @@ export class JSONSchemaDraft07 {
                 if (this.hasMetadata(rule.value)) {
                     ctx.definitions = ctx.definitions || [];
                     ctx.definitions.push(rule.value);
-                    return { ...property, result: { $ref: `${this.id}/definitions/${rule.value.name.toLowerCase()}` } }
+                    const result = new JSONSchemaDraft07(rule.value.name.toLowerCase(), Reflect.getMetadata(PROPERTIES, rule.value))
+                        .toJSONSchema(false, false);
+                    return { ...property, result };
                 }
                 return { ...property, result: { type: 'object' } };
         }
@@ -91,10 +95,10 @@ export class JSONSchemaDraft07 {
         return !!rule;
     }
 
-    private definitions(schemas: AnyClass[]) {
-        return schemas
-            .map(schema => new JSONSchemaDraft07(schema.name.toLowerCase(), Reflect.getMetadata(PROPERTIES, schema))
-                .toJSONSchema(false))
-            .reduce((a, c) => a[c.name] = c, {});
-    }
+    // private definitions(schemas: AnyClass[]) {
+    //     return schemas
+    //         .map(schema => new JSONSchemaDraft07(schema.name.toLowerCase(), Reflect.getMetadata(PROPERTIES, schema))
+    //             .toJSONSchema(false))
+    //         .reduce((a, c) => a[c.name] = c, {});
+    // }
 }

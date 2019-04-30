@@ -31,6 +31,15 @@ class Yolo3 extends Yolo2 {
     prop6: string;
 }
 
+class Item {
+    @Required()
+    foo: boolean;
+}
+class P {
+    @Required()
+    item: Item;
+}
+
 // Reflect.getMetadataKeys(Yolo2).forEach(x => console.log(Reflect.getMetadata(x, Yolo2)));
 
 // const AJV = new ajv();
@@ -42,6 +51,7 @@ class Yolo3 extends Yolo2 {
 try {
     // console.log(getProperties(Yolo2).map(x => x.rules))
 console.log(serializer(Yolo3));
+console.log(serializer(P));
 } catch (e) { console.log(e) }
 
 // import { Type } from '..';
