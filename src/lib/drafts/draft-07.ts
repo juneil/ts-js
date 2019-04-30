@@ -1,5 +1,5 @@
 import { ClassProperty } from '../tschema';
-import { TYPE, INTEGER, REQUIRED, AnyClass, isAnyClass, PROPERTIES, ITEM } from '../common';
+import { TYPE, INTEGER, REQUIRED, AnyClass, isAnyClass, PROPERTIES, ITEM, ENUM } from '../common';
 
 interface Context {
     definitions: AnyClass[]
@@ -20,6 +20,7 @@ export class JSONSchemaDraft07 {
     private serializeProperties(properties: ClassProperty[], ctx) {
         return properties
             .map(property => this.type(property, ctx))
+            .map(property => this.enum(property))
             .reduce((a, property) => ({ ...a, [property.key]: property.result }), {});
     }
 
@@ -107,6 +108,14 @@ export class JSONSchemaDraft07 {
                 }
         }
         return { items: result };
+    }
+
+    private enum(property: ClassProperty) {
+        const rule = property.rules.find(r => r.rule === ENUM);
+        if (rule && rule.value && rule.value.length) {
+            return { ...property, result: { ...property.result, enum: rule.value }};
+        }
+        return property;
     }
 
     private integer(property: ClassProperty) {

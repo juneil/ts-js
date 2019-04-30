@@ -3,6 +3,7 @@ export const TYPE           = Symbol('tschema-type');
 export const INTEGER        = Symbol('tschema-integer');
 export const REQUIRED       = Symbol('tschema-required');
 export const ITEM           = Symbol('tschema-item');
+export const ENUM           = Symbol('tschema-enum');
 
 export const AnyClass = Function;
 

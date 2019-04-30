@@ -1,4 +1,4 @@
-import { Optional, serializer, Integer, Required, properties, getProperties, Item } from '../src/lib/tschema';
+import { Optional, serializer, Integer, Required, properties, getProperties, Item, Enum } from '../src/lib/tschema';
 import { PROPERTIES } from '../src/lib/common';
 // import * as ajv from 'ajv';
 
@@ -41,6 +41,9 @@ class P {
     @Required()
     @Item(Item2)
     list: Item2[];
+    @Optional()
+    @Enum('gogo', 'popo')
+    yo: 'gogo' | 'popo';
 }
 
 // Reflect.getMetadataKeys(Yolo2).forEach(x => console.log(Reflect.getMetadata(x, Yolo2)));
